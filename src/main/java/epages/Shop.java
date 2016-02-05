@@ -1,7 +1,9 @@
 package epages;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,17 +23,21 @@ import org.json.simple.parser.ParseException;
 
 /**
  * Represents a epages Shop.
+ *
  * @author Bastian
  */
 public class Shop {
 
-    private String baseUrl;
-    private Client client;
+
+    private final String baseUrl;
+    private final Client client;
 
 
     /**
      * Constructor of this object.
-     * @param epagesBaseUrl to the epages shop.
+     *
+     * @param epagesBaseUrl
+     *            to the epages shop.
      */
     public Shop(final String epagesBaseUrl) {
 
@@ -40,32 +47,32 @@ public class Shop {
 
     /**
      * This function gets all products of the first page.
+     *
      * @return List of products.
      */
     public List<Product> getProducts() {
 
-        WebTarget resource = client.target(baseUrl + "products/");
-        Invocation.Builder request = resource.request();
+        final WebTarget resource = client.target(baseUrl + "products/");
+        final Invocation.Builder request = resource.request();
         request.accept(MediaType.APPLICATION_JSON);
         JSONObject products = null;
 
-        Response response = ((SyncInvoker) request).get();
+        final Response response = ((SyncInvoker) request).get();
         if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
             System.out.println("Success! " + response.getStatus());
             System.out.println(response.getEntity());
             try {
                 products = (JSONObject) new JSONParser().parse(response.readEntity(String.class));
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 e.printStackTrace();
             }
-
         } else {
             System.out.println("ERROR! " + response.getStatus());
             System.out.println(response.getEntity());
             products = null;
         }
-        ArrayList<Product> listOfProducts = new ArrayList<Product>();
-        JSONArray items = (JSONArray) products.get("items");
+        final ArrayList<Product> listOfProducts = new ArrayList<Product>();
+        final JSONArray items = (JSONArray) products.get("items");
 
         for (int i = 0; i < items.size() - 1; i++) {
             listOfProducts.add(new Product((JSONObject) items.get(i)));
