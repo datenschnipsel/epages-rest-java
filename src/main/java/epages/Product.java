@@ -170,6 +170,23 @@ public class Product extends JSONObject {
     }
 
     /**
+     * Getter for the tax type.
+     *
+     * @return String containing the tax type of the product.
+     */
+    public String getTaxType() {
+
+        final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
+        final JSONObject price = (JSONObject) priceInfo.get("price");
+
+        if (price == null) {
+            return null;
+        }
+
+        return price.get("taxType").toString();
+    }
+
+    /**
      * Getter for the price with deposit.
      *
      * @return String containing the price with deposit of the product.
@@ -202,6 +219,23 @@ public class Product extends JSONObject {
         }
 
         return price.get("currency").toString();
+    }
+
+    /**
+     * Getter for the tax type with deposit.
+     *
+     * @return String containing the tax type with deposit of the product.
+     */
+    public String getDepositsTaxType() {
+
+        final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
+        final JSONObject price = (JSONObject) priceInfo.get("priceWithDeposits");
+
+        if (price == null) {
+            return null;
+        }
+
+        return price.get("taxType").toString();
     }
 
     /**
@@ -305,7 +339,7 @@ public class Product extends JSONObject {
     /**
      * Getter for the manufacturer tax type of the product.
      *
-     * @return String containing the manufacturers price.
+     * @return String containing the manufacturers tax type.
      */
     public String getManufacturerTaxType() {
 

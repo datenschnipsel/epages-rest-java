@@ -43,8 +43,10 @@ public final class Test {
             System.out.println(products.get(i).getUnit());
             System.out.println(products.get(i).getPrice());
             System.out.println(products.get(i).getCurrency());
+            System.out.println(products.get(i).getTaxType());
             System.out.println(products.get(i).getDepositsPrice());
             System.out.println(products.get(i).getDepositsCurrency());
+            System.out.println(products.get(i).getDepositsTaxType());
             System.out.println(products.get(i).getAvailability());
             System.out.println(products.get(i).getAvailabilityText());
             System.out.println(products.get(i).getStorefrontUrl());
