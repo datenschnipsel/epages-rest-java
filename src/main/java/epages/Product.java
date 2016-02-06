@@ -76,7 +76,13 @@ public class Product extends JSONObject {
      */
     public String getDescription() {
 
-        return this.get("description").toString();
+        final Object description = this.get("description");
+
+        if (description == null) {
+            return null;
+        }
+
+        return description.toString();
     }
 
     /**
@@ -86,7 +92,13 @@ public class Product extends JSONObject {
      */
     public String getProductImage() {
 
-        return this.get("productImage").toString();
+        final Object productImage = this.get("productImage");
+
+        if (productImage == null) {
+            return null;
+        }
+
+        return productImage.toString();
     }
 
     /**
@@ -133,6 +145,10 @@ public class Product extends JSONObject {
         final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
         final JSONObject price = (JSONObject) priceInfo.get("price");
 
+        if (price == null) {
+            return null;
+        }
+
         return price.get("amount").toString();
     }
 
@@ -145,6 +161,10 @@ public class Product extends JSONObject {
 
         final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
         final JSONObject price = (JSONObject) priceInfo.get("price");
+
+        if (price == null) {
+            return null;
+        }
 
         return price.get("currency").toString();
     }
@@ -159,6 +179,10 @@ public class Product extends JSONObject {
         final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
         final JSONObject price = (JSONObject) priceInfo.get("priceWithDeposits");
 
+        if (price == null) {
+            return null;
+        }
+
         return price.get("amount").toString();
     }
 
@@ -172,6 +196,10 @@ public class Product extends JSONObject {
 
         final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
         final JSONObject price = (JSONObject) priceInfo.get("priceWithDeposits");
+
+        if (price == null) {
+            return null;
+        }
 
         return price.get("currency").toString();
     }
@@ -231,7 +259,13 @@ public class Product extends JSONObject {
      */
     public String getManufacturer() {
 
-        return this.get("manufacturer").toString();
+        final Object manufacturer = this.get("manufacturer");
+
+        if (manufacturer == null) {
+            return null;
+        }
+
+        return manufacturer.toString();
     }
 
     /**
@@ -242,12 +276,47 @@ public class Product extends JSONObject {
     public String getManufacturerPrice() {
 
         final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
+        final JSONObject manufacturerPrice = (JSONObject) priceInfo.get("manufacturerPrice");
 
-        if (priceInfo.get("manufacturerPrice") == null) {
+        if (manufacturerPrice == null) {
             return null;
         }
 
-        return priceInfo.get("manufacturerPrice").toString();
+        return manufacturerPrice.get("amount").toString();
+    }
+
+    /**
+     * Getter for the manufacturer currency of the product.
+     *
+     * @return String containing the manufacturers price.
+     */
+    public String getManufacturerCurrency() {
+
+        final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
+        final JSONObject manufacturerPrice = (JSONObject) priceInfo.get("manufacturerPrice");
+
+        if (manufacturerPrice == null) {
+            return null;
+        }
+
+        return manufacturerPrice.get("currency").toString();
+    }
+
+    /**
+     * Getter for the manufacturer tax type of the product.
+     *
+     * @return String containing the manufacturers price.
+     */
+    public String getManufacturerTaxType() {
+
+        final JSONObject priceInfo = (JSONObject) this.get("priceInfo");
+        final JSONObject manufacturerPrice = (JSONObject) priceInfo.get("manufacturerPrice");
+
+        if (manufacturerPrice == null) {
+            return null;
+        }
+
+        return manufacturerPrice.get("taxType").toString();
     }
 
     /**
@@ -301,10 +370,10 @@ public class Product extends JSONObject {
         final JSONObject isRestricted = (JSONObject) this.get("shippingMethodRestrictedTo");
 
         if (isRestricted == null) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**

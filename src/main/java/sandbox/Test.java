@@ -30,7 +30,7 @@ public final class Test {
      */
     public static void main(final String[] args) {
 
-        final Shop shop = new Shop("http://unstable-main.epages.com/rs/shops/bklein/");
+        final Shop shop = new Shop("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/");
         final List<Product> products = shop.getProducts();
 
         for (int i = 0; i < products.size(); i++) {
@@ -51,6 +51,8 @@ public final class Test {
             System.out.println(products.get(i).getProductNumber());
             System.out.println(products.get(i).getManufacturer());
             System.out.println(products.get(i).getManufacturerPrice());
+            System.out.println(products.get(i).getManufacturerCurrency());
+            System.out.println(products.get(i).getManufacturerTaxType());
             System.out.println(products.get(i).isForSale());
             System.out.println(products.get(i).isSpecialOffer());
             System.out.println(products.get(i).getDeliveryWeight());
