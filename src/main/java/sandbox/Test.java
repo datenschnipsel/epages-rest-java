@@ -11,7 +11,7 @@ import epages.Shop;
 /**
  * Testclass for testing the framework.
  *
- * @author Bastian
+ * @author Bastian Klein(bastianklein92@gmail.com)
  */
 public final class Test {
 
@@ -30,7 +30,8 @@ public final class Test {
      */
     public static void main(final String[] args) {
 
-        final Shop shop = new Shop("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/");
+        final Shop shop = new Shop("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/",
+                "zm3z1EwsWRvvq3arr2q5rumHeAEXoyuX");
         final List<Product> products = shop.getProducts();
 
         for (int i = 0; i < products.size(); i++) {

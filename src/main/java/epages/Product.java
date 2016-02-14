@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 /**
  * This Class represents a product of an epages shop.
  *
- * @author Bastian
+ * @author Bastian Klein(bastianklein92@gmail.com)
  *
  */
 public class Product extends JSONObject {
@@ -356,7 +356,7 @@ public class Product extends JSONObject {
     /**
      * Getter for the forSale field.
      *
-     * @return {@True} if the product is for sale, else {@false}.
+     * @return True if the product is for sale, else False.
      */
     public boolean isForSale() {
 
@@ -368,7 +368,7 @@ public class Product extends JSONObject {
     /**
      * Getter for the specialOffer field.
      *
-     * @return {@True} if the product is a special offer, else {@false}.
+     * @return True if the product is a special offer, else False.
      */
     public boolean isSpecialOffer() {
 
@@ -396,8 +396,8 @@ public class Product extends JSONObject {
     /**
      * Checks if the product is restricted to a special shipping method.
      *
-     * @return {@true} if the product is not restricted to a special shipping
-     *         method, else {@false}.
+     * @return True if the product is not restricted to a special shipping
+     *         method, else False.
      */
     public boolean isShippingMethodRestricted() {
 
