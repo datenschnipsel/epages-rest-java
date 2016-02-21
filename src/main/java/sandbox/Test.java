@@ -1,6 +1,7 @@
 package sandbox;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -32,9 +33,15 @@ public final class Test {
 
         final Shop shop = new Shop("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/",
                 "zm3z1EwsWRvvq3arr2q5rumHeAEXoyuX");
-        final List<Product> products = shop.getProducts();
+        final HashMap<String, String> hm = new HashMap<String, String>();
+        hm.put("page", "1");
+        hm.put("resultsPerPage", "6");
+        hm.put("direction", "desc");
+
+        final List<Product> products = shop.getProductPageWithQueryParams(hm);
 
         for (int i = 0; i < products.size(); i++) {
+            System.out.println("---------------------------------------------------------------------------------");
             System.out.println(products.get(i).getID());
             System.out.println(products.get(i).getName());
             System.out.println(products.get(i).getShortDescription());
@@ -61,6 +68,12 @@ public final class Test {
             System.out.println(products.get(i).getDeliveryWeight());
             System.out.println(products.get(i).isShippingMethodRestricted());
             System.out.println(products.get(i).getShippingMethodRestrictedTo());
+
         }
+        System.out.println(products.size());
+        System.out.println(products.get(0).getStocklevel());
+        products.get(0).addToPatch("name", "Testproduct12345678790ForPatch");
+        products.set(0, products.get(0).patch());
+        products.get(0).getName();
     }
 }

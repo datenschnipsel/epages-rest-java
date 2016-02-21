@@ -5,8 +5,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.SyncInvoker;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
+
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 /**
@@ -23,15 +33,28 @@ public class Product extends JSONObject {
      */
     private static final long serialVersionUID = 1;
 
+    /**
+     * Shop of the product.
+     */
+    private final Shop shop;
+
+    /**
+     * String containing the JSON patch for this product.
+     */
+    private final StringBuilder patch = new StringBuilder();
+
 
     /**
      * Constructor of this class.
      *
      * @param product
      *            The product as JSONObject.
+     * @param shopObject
+     *            The product's shop..
      */
-    public Product(final JSONObject product) {
+    public Product(final JSONObject product, final Shop shopObject) {
         super(product);
+        this.shop = shopObject;
     }
 
     /**
@@ -424,5 +447,133 @@ public class Product extends JSONObject {
         } else {
             return restrictedTo.toString();
         }
+    }
+
+    /**
+     * Getter for the stocklevel of the product.
+     *
+     * @return Float containing the stocklevel.
+     */
+    public Double getStocklevel() {
+
+        final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+        Double stocklevel = null;
+
+        final Response response = ((SyncInvoker) request).get();
+        if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
+            System.out.println("Success! " + response.getStatus());
+            System.out.println(response.getEntity());
+            try {
+                stocklevel = (Double) ((JSONObject) new JSONParser().parse(response.readEntity(String.class)))
+                        .get("stocklevel");
+            } catch (final ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("ERROR! " + response.getStatus());
+            System.out.println(response.getEntity());
+            stocklevel = null;
+        }
+
+        return stocklevel;
+    }
+
+    /**
+     * Increments the stocklevel by the given value, if value >= 0.
+     *
+     * @param value
+     *            Value of the increment.
+     * @return The new stocklevel if value >= 0, else null.
+     */
+    public Double incrementStocklevel(final double value) {
+
+        Double stocklevel = null;
+
+        if (value > 0) {
+            final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+
+            final Response response = ((SyncInvoker) request)
+                    .put(Entity.entity("{\"changeStocklevel\": " + value + "}", MediaType.APPLICATION_JSON));
+            if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
+                System.out.println("Success! " + response.getStatus());
+                System.out.println(response.getEntity());
+                try {
+                    stocklevel = (Double) ((JSONObject) new JSONParser().parse(response.readEntity(String.class)))
+                            .get("stocklevel");
+                } catch (final ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("ERROR! " + response.getStatus());
+                System.out.println(response.getEntity());
+                stocklevel = null;
+            }
+        }
+
+        return stocklevel;
+    }
+
+    /**
+     * Decrements the stocklevel by the given value, if value >= 0.
+     *
+     * @param value
+     *            Value of the decrement.
+     * @return The new stocklevel if value >= 0, else null.
+     */
+    public Double decrementStocklevel(final double value) {
+
+        Double stocklevel = null;
+
+        if (value > 0) {
+            final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+
+            final Response response = ((SyncInvoker) request)
+                    .put(Entity.entity("{\"changeStocklevel\": -" + value + "}", MediaType.APPLICATION_JSON));
+            if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
+                try {
+                    stocklevel = (Double) ((JSONObject) new JSONParser().parse(response.readEntity(String.class)))
+                            .get("stocklevel");
+                } catch (final ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                stocklevel = null;
+            }
+        }
+
+        return stocklevel;
+    }
+
+    /**
+     * Adding one key to the actual patch.
+     *
+     * @param key
+     *            JSON key that should be patched.
+     * @param value
+     *            New value of the specified key.
+     */
+    public void addToPatch(final String key, final String value) {
+
+        this.patch.append("{\n");
+        this.patch.append("    \"op\": \"add\",\n");
+        this.patch.append("    \"path\": \"" + key + "\",\n");
+        this.patch.append("    \"value\": \"" + value + "\",\n");
+        this.patch.append("},\n");
+    }
+
+    /**
+     * Patches the product. Does not work yet :(
+     *
+     * @return A new Product with the patch.
+     */
+    public Product patch() {
+
+        this.patch.delete(this.patch.length() - 2, this.patch.length());
+        final Invocation.Builder request = shop.getPatchRequest("products/" + this.getID());
+
+        final Response response = ((SyncInvoker) request)
+                .post(Entity.entity(patch.toString(), "application/json-patch+json"));
+
+        return shop.createProducts(response).get(0);
     }
 }
