@@ -16,7 +16,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -33,6 +36,7 @@ public class Shop {
 
     private final String baseUrl;
     private final Client client;
+    private final JerseyClient patchClient;
     private final String token;
 
 
@@ -52,6 +56,9 @@ public class Shop {
             this.baseUrl = epagesBaseUrl;
         }
         this.client = ClientBuilder.newClient();
+        final ClientConfig config = new ClientConfig();
+        this.patchClient = JerseyClientBuilder.createClient(config);
+        this.patchClient.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
         this.token = accessToken;
     }
 
@@ -82,13 +89,11 @@ public class Shop {
      */
     protected Invocation.Builder getPatchRequest(final String target) {
 
-        client.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
-        final WebTarget resource = client.target(baseUrl + target);
+        final WebTarget resource = this.patchClient.target(baseUrl + target);
         final Invocation.Builder request = resource.request();
-        request.accept(MediaType.APPLICATION_JSON);
+        request.accept("application/vnd.epages.v1+json");
         request.header("Authorization", "Bearer " + token);
         request.header("Content-Type", MediaType.APPLICATION_JSON);
-        request.header("X-HTTP-Method-Override", "PATCH");
 
         return request;
     }

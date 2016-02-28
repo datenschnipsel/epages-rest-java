@@ -554,26 +554,34 @@ public class Product extends JSONObject {
      */
     public void addToPatch(final String key, final String value) {
 
-        this.patch.append("{\n");
+        this.patch.append("[{\n");
         this.patch.append("    \"op\": \"add\",\n");
-        this.patch.append("    \"path\": \"" + key + "\",\n");
-        this.patch.append("    \"value\": \"" + value + "\",\n");
+        this.patch.append("    \"path\": \"/" + key + "\",\n");
+        this.patch.append("    \"value\": \"" + value + "\"\n");
         this.patch.append("},\n");
     }
 
     /**
-     * Patches the product. Does not work yet :(
+     * Patches the product.
      *
      * @return A new Product with the patch.
      */
     public Product patch() {
 
         this.patch.delete(this.patch.length() - 2, this.patch.length());
+        this.patch.append("]");
+        JSONObject product = null;
+
         final Invocation.Builder request = shop.getPatchRequest("products/" + this.getID());
+        final Response response = ((SyncInvoker) request).method("PATCH",
+                Entity.entity(patch.toString(), "application/json-patch+json"));
 
-        final Response response = ((SyncInvoker) request)
-                .post(Entity.entity(patch.toString(), "application/json-patch+json"));
+        try {
+            product = (JSONObject) new JSONParser().parse(response.readEntity(String.class));
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+        }
 
-        return shop.createProducts(response).get(0);
+        return new Product(product, this.shop);
     }
 }
