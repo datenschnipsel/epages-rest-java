@@ -7,6 +7,7 @@ import java.util.List;
 
 import epages.Product;
 import epages.Shop;
+import epages.util.PatchBuilder;
 
 
 /**
@@ -74,6 +75,12 @@ public final class Test {
         System.out.println(products.get(0).getStocklevel());
         products.get(0).addToPatch("name", "Testproduct ForPatch");
         products.set(0, products.get(0).patch());
-        products.get(0).getName();
+        System.out.println(products.get(0).getName());
+
+        final PatchBuilder pb = new PatchBuilder();
+        pb.add("name", "blaablub");
+        pb.add("test", "blaablub");
+        pb.add("blablubb", "blaablub");
+        System.out.println(pb.toString());
     }
 }
