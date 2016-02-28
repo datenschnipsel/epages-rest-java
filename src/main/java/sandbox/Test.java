@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import epages.Product;
-import epages.Shop;
-import epages.util.PatchBuilder;
+import com.epages.rest.domain.Product;
+import com.epages.rest.EpagesShopClient;
+import com.epages.rest.util.PatchBuilder;
 
 
 /**
@@ -32,14 +32,14 @@ public final class Test {
      */
     public static void main(final String[] args) {
 
-        final Shop shop = new Shop("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/",
+        final EpagesShopClient epagesShopClient = new EpagesShopClient("http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/",
                 "zm3z1EwsWRvvq3arr2q5rumHeAEXoyuX");
         final HashMap<String, String> hm = new HashMap<String, String>();
         hm.put("page", "1");
         hm.put("resultsPerPage", "6");
         hm.put("direction", "desc");
 
-        final List<Product> products = shop.getProductPageWithQueryParams(hm);
+        final List<Product> products = epagesShopClient.getProductPageWithQueryParams(hm);
 
         for (int i = 0; i < products.size(); i++) {
             System.out.println("---------------------------------------------------------------------------------");

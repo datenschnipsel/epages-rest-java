@@ -1,4 +1,4 @@
-package epages;
+package com.epages.rest;
 
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
 
+import com.epages.rest.domain.Product;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.JerseyClient;
@@ -31,7 +32,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author Bastian Klein(bastianklein92@gmail.com)
  */
-public class Shop {
+public class EpagesShopClient {
 
 
     private final String baseUrl;
@@ -48,7 +49,7 @@ public class Shop {
      * @param accessToken
      *            The credentials for accessing the API.
      */
-    public Shop(final String epagesBaseUrl, final String accessToken) {
+    public EpagesShopClient(final String epagesBaseUrl, final String accessToken) {
 
         if (epagesBaseUrl.charAt(epagesBaseUrl.length() - 1) != '/') {
             this.baseUrl = epagesBaseUrl + "/";
@@ -69,7 +70,7 @@ public class Shop {
      *            Target to be retrieved.
      * @return A new request.
      */
-    protected Invocation.Builder getRequest(final String target) {
+    public Invocation.Builder getRequest(final String target) {
 
         final WebTarget resource = client.target(baseUrl + target);
         final Invocation.Builder request = resource.request();
@@ -87,7 +88,7 @@ public class Shop {
      *            Target to be retrieved.
      * @return A new patch request.
      */
-    protected Invocation.Builder getPatchRequest(final String target) {
+    public Invocation.Builder getPatchRequest(final String target) {
 
         final WebTarget resource = this.patchClient.target(baseUrl + target);
         final Invocation.Builder request = resource.request();
@@ -129,19 +130,20 @@ public class Shop {
     /**
      * Gets a list with the products on a given page.
      *
+     * @param epagesShopClient
      * @param pageNumber
      *            Number of the product page.
      * @param resultsPerPage
      *            Number of results per page (max. 100).
      * @return List of products.
      */
-    public List<Product> getProductPage(final int pageNumber, final int resultsPerPage) {
+    public static List<Product> getProductPage(EpagesShopClient epagesShopClient, final int pageNumber, final int resultsPerPage) {
 
-        final Invocation.Builder request = this
+        final Invocation.Builder request = epagesShopClient
                 .getRequest("products?page=" + pageNumber + "&resultsPerPage=" + resultsPerPage);
         final Response response = ((SyncInvoker) request).get();
 
-        return createProducts(response);
+        return epagesShopClient.createProducts(response);
     }
 
     /**
@@ -182,7 +184,7 @@ public class Shop {
      *            HTTP response.
      * @return A list of products.
      */
-    protected List<Product> createProducts(final Response response) {
+    public List<Product> createProducts(final Response response) {
 
         JSONObject products = null;
 

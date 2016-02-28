@@ -1,4 +1,4 @@
-package epages.util;
+package com.epages.rest.util;
 
 
 /**

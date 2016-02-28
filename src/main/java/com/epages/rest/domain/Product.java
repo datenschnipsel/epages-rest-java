@@ -1,4 +1,4 @@
-package epages;
+package com.epages.rest.domain;
 
 
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
 
+import com.epages.rest.EpagesShopClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -36,7 +37,7 @@ public class Product extends JSONObject {
     /**
      * Shop of the product.
      */
-    private final Shop shop;
+    private final EpagesShopClient epagesShopClient;
 
     /**
      * String containing the JSON patch for this product.
@@ -49,12 +50,12 @@ public class Product extends JSONObject {
      *
      * @param product
      *            The product as JSONObject.
-     * @param shopObject
+     * @param epagesShopClientObject
      *            The product's shop..
      */
-    public Product(final JSONObject product, final Shop shopObject) {
+    public Product(final JSONObject product, final EpagesShopClient epagesShopClientObject) {
         super(product);
-        this.shop = shopObject;
+        this.epagesShopClient = epagesShopClientObject;
     }
 
     /**
@@ -456,7 +457,7 @@ public class Product extends JSONObject {
      */
     public Double getStocklevel() {
 
-        final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+        final Invocation.Builder request = epagesShopClient.getRequest("products/" + this.getID() + "/stock-level/");
         Double stocklevel = null;
 
         final Response response = ((SyncInvoker) request).get();
@@ -490,7 +491,7 @@ public class Product extends JSONObject {
         Double stocklevel = null;
 
         if (value > 0) {
-            final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+            final Invocation.Builder request = epagesShopClient.getRequest("products/" + this.getID() + "/stock-level/");
 
             final Response response = ((SyncInvoker) request)
                     .put(Entity.entity("{\"changeStocklevel\": " + value + "}", MediaType.APPLICATION_JSON));
@@ -525,7 +526,7 @@ public class Product extends JSONObject {
         Double stocklevel = null;
 
         if (value > 0) {
-            final Invocation.Builder request = shop.getRequest("products/" + this.getID() + "/stock-level/");
+            final Invocation.Builder request = epagesShopClient.getRequest("products/" + this.getID() + "/stock-level/");
 
             final Response response = ((SyncInvoker) request)
                     .put(Entity.entity("{\"changeStocklevel\": -" + value + "}", MediaType.APPLICATION_JSON));
@@ -572,7 +573,7 @@ public class Product extends JSONObject {
         this.patch.append("]");
         JSONObject product = null;
 
-        final Invocation.Builder request = shop.getPatchRequest("products/" + this.getID());
+        final Invocation.Builder request = epagesShopClient.getPatchRequest("products/" + this.getID());
         final Response response = ((SyncInvoker) request).method("PATCH",
                 Entity.entity(patch.toString(), "application/json-patch+json"));
 
@@ -582,6 +583,6 @@ public class Product extends JSONObject {
             System.out.println(e.toString());
         }
 
-        return new Product(product, this.shop);
+        return new Product(product, this.epagesShopClient);
     }
 }

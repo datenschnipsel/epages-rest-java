@@ -3,4 +3,4 @@
  *
  * @author Bastian Klein(bastianklein92@gmail.com)
  */
-package epages;
+package com.epages;
