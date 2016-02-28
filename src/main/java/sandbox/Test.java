@@ -72,7 +72,7 @@ public final class Test {
         }
         System.out.println(products.size());
         System.out.println(products.get(0).getStocklevel());
-        products.get(0).addToPatch("name", "Testproduct12345678790ForPatch");
+        products.get(0).addToPatch("name", "Testproduct ForPatch");
         products.set(0, products.get(0).patch());
         products.get(0).getName();
     }
