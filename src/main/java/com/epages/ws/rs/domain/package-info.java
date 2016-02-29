@@ -3,4 +3,4 @@
  *
  * @date 2016-02-29
  */
-package com.epages.rest.domain;
+package com.epages.ws.rs.domain;

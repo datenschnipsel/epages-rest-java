@@ -1,7 +1,7 @@
-package com.epages.rest.service;
+package com.epages.ws.rs.service;
 
-import com.epages.rest.EpagesShopClient;
-import com.epages.rest.domain.Product;
+import com.epages.ws.rs.EpagesShopClient;
+import com.epages.ws.rs.domain.Product;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -68,7 +68,7 @@ public class ProductService {
         final Invocation.Builder request = client.getRequest("products?page=" + pageNumber + "&resultsPerPage=" + resultsPerPage);
         final Response response = ((SyncInvoker) request).get();
 
-        return client.createProducts(response);
+        return createProducts(response);
     }
 
     /**

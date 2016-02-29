@@ -1,4 +1,4 @@
-package com.epages.rest.util;
+package com.epages.ws.rs.util;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.epages.rest.domain;
+package com.epages.ws.rs.domain;
 
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
 
-import com.epages.rest.EpagesShopClient;
+import com.epages.ws.rs.EpagesShopClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

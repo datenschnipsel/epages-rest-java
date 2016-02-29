@@ -1,30 +1,44 @@
-package com.epages.rest;
+package com.epages.ws.rs.service;
 
-import com.epages.rest.domain.Product;
-import com.epages.rest.util.PatchBuilder;
+import com.epages.ws.rs.EpagesShopClient;
+import com.epages.ws.rs.domain.Product;
+import com.epages.ws.rs.service.ProductService;
+import com.epages.ws.rs.util.PatchBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * @date 2016-02-28
+ * Tests for the product service.
  */
-public class EpagesShopClientTest {
+public class ProductServiceTest {
 
+    private EpagesShopClient epagesShopClient;
+    private ProductService productService;
+
+    @Before
+    public void setUp(){
+
+        epagesShopClient = new EpagesShopClient(
+                "http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/",
+                "zm3z1EwsWRvvq3arr2q5rumHeAEXoyuX");
+
+        productService = epagesShopClient.getProductService();
+
+    }
 
     @Test
-    public void sendRequests() {
+    public void testGetProductPageWithQueryParams() {
 
-        final EpagesShopClient epagesShopClient = new EpagesShopClient(
-                "http://sandbox.epages.com/rs/shops/EpagesDevD20160206T184335R191/", "zm3z1EwsWRvvq3arr2q5rumHeAEXoyuX");
         final HashMap<String, String> hm = new HashMap<String, String>();
 
         hm.put("page", "1");
         hm.put("resultsPerPage", "6");
         hm.put("direction", "desc");
 
-        final List<Product> products = epagesShopClient.getProductPageWithQueryParams(hm);
+        final List<Product> products = productService.getProductPageWithQueryParams(hm);
 
         for (Product product : products) {
             System.out.println("---------------------------------------------------------------------------------");

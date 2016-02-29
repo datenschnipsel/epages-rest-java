@@ -3,4 +3,4 @@
  *
  * @date 2016-02-29
  */
-package com.epages.rest.service;
+package com.epages.ws.rs.service;
